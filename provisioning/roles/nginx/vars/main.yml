@@ -1,0 +1,7 @@
+---
+host: 'local.otakumode.com'
+root_directory: '/vagrant'
+app_port: 3000
+app_name: 'otakumode'
+ssl_certificate_file: 'app.crt'
+ssl_certificate_key_file: 'app.key'

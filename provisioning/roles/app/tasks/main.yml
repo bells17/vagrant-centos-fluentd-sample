@@ -1,0 +1,19 @@
+---
+- name: Get nvm node default version
+  shell: cat ~/.nvm/alias/default
+  register: nvm_node_version
+
+- name: Ensure create app log file directory
+  file: path=/var/log/nodejs state=directory mode=0755
+
+- name: Ensure set package.json
+  copy: src=~:app/package.json dest=~/app/package.json mode=0775
+
+- name: Ensure install app package
+  shell: cd ~/app && ~/.nvm/{{ nvm_node_version.stdout }}/bin/npm install
+
+- name: Ensure set app script
+  copy: src=~:app/index.js dest=~/app/index.js mode=0775
+
+- name: Ensure set app script
+  copy: src=~:app/log.sh dest=~/app/log.sh mode=0775

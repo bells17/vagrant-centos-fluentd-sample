@@ -1,0 +1,60 @@
+---
+- name: Ensure install common package for nginx
+  yum: name={{ item }} state=present
+  with_items:
+    - gcc
+    - pcre
+    - pcre-devel    
+    - zlib
+    - zlib-devel
+    - openssl
+    - openssl-devel
+
+- name: Is installed nginx
+  shell: test -e /etc/init.d/nginx
+  register: is_installed_nginx
+  always_run: yes
+  failed_when: no
+  changed_when: is_installed_nginx.rc != 0
+
+- name: Add nginx group
+  group: name=nginx state=present
+  when: is_installed_nginx.rc != 0
+
+- name: Add nginx user
+  user: name=nginx group=nginx state=present
+  when: is_installed_nginx.rc != 0
+
+- name: Ensure download nginx source
+  get_url: url=http://nginx.org/download/nginx-1.2.9.tar.gz dest=/tmp/
+  when: is_installed_nginx.rc != 0
+
+- name: Ensure decompression nginx source
+  shell: cd /tmp/ && tar zxvf nginx-1.2.9.tar.gz
+  when: is_installed_nginx.rc != 0
+
+- name: Ensure install nginx
+  shell: cd /tmp/nginx-1.2.9 && ./configure --with-http_ssl_module --with-http_stub_status_module && make && make install
+  when: is_installed_nginx.rc != 0
+
+- name: Set nginx init script
+  copy: src=:etc:init.d/nginx dest=/etc/init.d/nginx mode=0775
+  when: is_installed_nginx.rc != 0
+
+- name: Ensure create nginx log file directory
+  file: path=/var/log/nginx state=directory mode=0755
+
+- name: Ensure create nginx ssl file directory
+  file: path=/usr/local/nginx/ssl state=directory mode=0755
+
+- name: Set nginx ssl certificate file
+  copy: src=:usr:local:nginx:ssl/{{ item }} dest=/usr/local/nginx/ssl/{{ item }} mode=0775
+  with_items:
+    - "{{ ssl_certificate_file }}"
+    - "{{ ssl_certificate_key_file }}"
+
+- name: Set nginx default conf
+  copy: src=:usr:local:nginx:conf/nginx.conf dest=/usr/local/nginx/conf/nginx.conf mode=0775
+
+- name: Ensure start nginx server and setting chkconfig
+  service: name=nginx state=restarted enabled=yes

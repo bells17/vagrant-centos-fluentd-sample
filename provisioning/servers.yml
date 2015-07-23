@@ -1,3 +1,6 @@
 ---
-- include: fluentd-host.yml tags=fluentd-host
-- include: fluentd-client.yml tags=fluentd-client
+- include: fluentd-host.yml
+- include: fluentd-client.yml
+
+- include: app.yml
+- include: nginx.yml

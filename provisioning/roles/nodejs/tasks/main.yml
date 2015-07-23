@@ -1,0 +1,26 @@
+---
+- name: Is nodejs insatlled
+  shell: source ~/.nvm/nvm.sh || which node && node -h | echo $?
+  register: is_nodejs_installed
+  always_run: yes
+  ignore_errors: true
+  failed_when: no
+  changed_when: is_nodejs_installed.stdout != '0'
+
+- name: Set nvm
+  git: repo=https://github.com/creationix/nvm.git dest=~/.nvm
+  when: is_nodejs_installed.stdout != '0'
+
+- name: Ensure install nodejs
+  shell: source ~/.nvm/nvm.sh && nvm install v0.10.26
+  when: is_nodejs_installed.stdout != '0'
+
+- name: Set nvm default
+  shell: source ~/.nvm/nvm.sh && nvm alias default {{ item }} && nvm use default
+  with_items:
+    v0.10.26
+  when: is_nodejs_installed.stdout != '0'
+
+- name: Add load nvm
+  lineinfile: dest='~/.bashrc' regexp="^source ~/.nvm/nvm.sh" line="source ~/.nvm/nvm.sh"
+  when: is_nodejs_installed.stdout != '0'
