@@ -1,0 +1,15 @@
+---
+- name: Ensure set iptables
+  template: src=:etc:sysconfig:iptables.j2 dest=/etc/sysconfig/iptables owner=root group=root mode=0644
+
+- name: Ensure restart iptables
+  service: name=iptables state=restarted
+
+- name: Ensure set td-agent config
+  template: src=:etc:td-agent:td-agent.conf.j2 dest=/etc/td-agent/td-agent.conf owner=root group=root mode=0644
+
+- name: Ensure stop td-agent
+  service: name=td-agent state=stopped
+
+- name: Ensure start td-agent
+  service: name=td-agent state=started

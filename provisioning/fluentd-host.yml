@@ -1,0 +1,7 @@
+---
+- hosts: fluentd-host
+  sudo: yes
+  roles:
+    - install-td-agent
+    - setting-td-agent-common
+    - setting-td-agent-host

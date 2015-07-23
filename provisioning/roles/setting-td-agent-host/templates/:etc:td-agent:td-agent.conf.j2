@@ -1,0 +1,24 @@
+<source>
+  type forward
+</source>
+
+<match nodejs.access.service>
+  type record_reformer
+  renew_record false
+  enable_ruby false
+
+  tag reformat.${tag}
+  <record>
+    message ${hostname} ${message}
+  </record>
+
+</match>
+
+<match reformat.nodejs.access.service>
+  type file
+  path /var/log/td-agent/nodejs/access.log.path
+  symlink_path /var/log/td-agent/nodejs/access.log
+  buffer_type file
+  buffer_path /var/log/td-agent/buffer/access.buf
+  format single_value
+</match>

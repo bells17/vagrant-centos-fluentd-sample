@@ -1,0 +1,25 @@
+---
+- name: Is install fluent-plugin-record-reformer gem
+  shell: test $(/usr/lib64/fluent/ruby/bin/fluent-gem list -i fluent-plugin-record-reformer) = true
+  register: is_installed_fluent_plugin_record_reformer_gem
+  always_run: yes
+  failed_when: no
+  changed_when: is_installed_fluent_plugin_record_reformer_gem.rc != 0
+
+- name: Ensure install fluent-plugin-record-reformer gem
+  shell: /usr/lib64/fluent/ruby/bin/fluent-gem install fluent-plugin-record-reformer
+  when: is_installed_fluent_plugin_record_reformer_gem.rc != 0
+
+- name: Ensure create td-agent config paths
+  file: path=/etc/td-agent/{{ item }} state=directory owner=root group=root mode=0777
+  with_items:
+    - pos
+    - plugin
+
+- name: Ensure create td-agent log paths
+  file: path=/var/log/td-agent/{{ item }} state=directory owner=root group=root mode=0777
+  with_items:
+    - ''
+    - buffer
+    - nginx
+    - nodejs

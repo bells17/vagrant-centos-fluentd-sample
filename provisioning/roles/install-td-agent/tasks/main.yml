@@ -1,0 +1,11 @@
+---
+- name: Is installed td-agent
+  shell: test -e /etc/init.d/td-agent
+  register: is_installed_td_agent
+  always_run: yes
+  failed_when: no
+  changed_when: is_installed_td_agent.rc != 0
+
+- name: Ensure install td-agent
+  shell: curl -L http://toolbelt.treasure-data.com/sh/install-redhat.sh | sh
+  when: is_installed_td_agent.rc != 0

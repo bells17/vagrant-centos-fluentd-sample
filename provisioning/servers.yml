@@ -1,0 +1,3 @@
+---
+- include: fluentd-host.yml tags=fluentd-host
+- include: fluentd-client.yml tags=fluentd-client

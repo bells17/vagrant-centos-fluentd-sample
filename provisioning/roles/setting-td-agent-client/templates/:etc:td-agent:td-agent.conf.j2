@@ -1,0 +1,26 @@
+<source>
+  type tail
+  path /var/log/sample.log
+  pos_file /etc/td-agent/pos/sample_log.pos
+  tag nodejs.access.service
+  format none
+</source>
+
+
+<match nodejs.access.service>
+  type forward
+  flush_interval 1s
+  buffer_type file
+  buffer_path /var/log/td-agent/buffer/client_buf
+  buffer_queue_limit 2048
+  buffer_chunk_limit 8m
+  flush_interval 60s
+  expire_dns_cache 120s
+  heartbeat_type tcp
+  retry_limit 19
+
+  <server>
+    host {{ td_agent_host_ip }}
+  </server>
+
+</match>
