@@ -1,13 +1,24 @@
 <source>
   type tail
-  path /var/log/sample.log
-  pos_file /etc/td-agent/pos/sample_log.pos
-  tag nodejs.access.service
+  path {{ access_log_file }}
+  pos_file {{ access_log_pos_file }}
+  tag {{ fluentd_log_type }}.access.service
   format none
 </source>
 
+<match {{ fluentd_log_type }}.access.service>
+  type record_reformer
+  renew_record false
+  enable_ruby false
 
-<match nodejs.access.service>
+  tag reformat.${tag}
+  <record>
+    message ${hostname} ${message}
+  </record>
+
+</match>
+
+<match reformat.{{ fluentd_log_type }}.access.service>
   type forward
   flush_interval 1s
   buffer_type file

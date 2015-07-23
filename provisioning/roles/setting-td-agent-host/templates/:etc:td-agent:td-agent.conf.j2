@@ -9,7 +9,7 @@
 
   tag reformat.${tag}
   <record>
-    message ${hostname} ${message}
+    message ${message}
   </record>
 
 </match>
@@ -19,6 +19,27 @@
   path /var/log/td-agent/nodejs/access.log.path
   symlink_path /var/log/td-agent/nodejs/access.log
   buffer_type file
-  buffer_path /var/log/td-agent/buffer/access.buf
+  buffer_path /var/log/td-agent/buffer/nodejs.access.buf
+  format single_value
+</match>
+
+<match nginx.access.service>
+  type record_reformer
+  renew_record false
+  enable_ruby false
+
+  tag reformat.${tag}
+  <record>
+    message ${message}
+  </record>
+
+</match>
+
+<match reformat.nginx.access.service>
+  type file
+  path /var/log/td-agent/nginx/access.log.path
+  symlink_path /var/log/td-agent/nginx/access.log
+  buffer_type file
+  buffer_path /var/log/td-agent/buffer/nginx.access.buf
   format single_value
 </match>
