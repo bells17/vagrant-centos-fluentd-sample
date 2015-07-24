@@ -1,6 +1,6 @@
 # vagrant-centos-fluentd-sample
 
-### require
+### required
 
 - Virtualbox
 - Vagrant
