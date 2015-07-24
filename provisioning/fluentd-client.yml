@@ -6,3 +6,5 @@
     - install-td-agent
     - setting-td-agent-common
     - setting-td-agent-client
+  tags:
+    - fluentd

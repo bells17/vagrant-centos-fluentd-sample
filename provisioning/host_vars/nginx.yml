@@ -1,8 +1,11 @@
 ---
-fluentd_log_type: nginx
-
-access_log_file: /var/log/nginx/access.log
-access_log_pos_file: /etc/td-agent/pos/nginx.access.log.pos
-
-error_log_file: /var/log/nginx/error.log
-error_log_pos_file: /etc/td-agent/pos/nginx.error.log.pos
+fluentd_application_type: nginx
+fluentd_log_type:
+  access:
+    name: access
+    log_file: /var/log/nginx/access.log
+    pos_file: /etc/td-agent/pos/nginx.access.log.pos
+  error:
+    name: error
+    log_file: /var/log/nginx/error.log
+    pos_file: /etc/td-agent/pos/nginx.error.log.pos

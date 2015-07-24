@@ -2,44 +2,21 @@
   type forward
 </source>
 
-<match nodejs.access.service>
-  type record_reformer
-  renew_record false
-  enable_ruby false
+<match *.*.*.service>
+  type forest
+  subtype file
 
-  tag reformat.${tag}
-  <record>
-    message ${message}
-  </record>
+  <template>
+    format single_value
+    path /var/log/td-agent/${tag_parts[1]}/${tag_parts[2]}.log
+    symlink_path /var/log/td-agent/${tag_parts[1]}/${tag_parts[2]}.log
+    compress gzip
+    buffer_type file
+    buffer_path /var/log/td-agent/buffer/${tag_parts[1]}.${tag_parts[2]}.buf
+    buffer_queue_limit 6144
+    buffer_chunk_limit 256m
+    flush_interval 60s
+    retry_limit 19
+  </template>
 
-</match>
-
-<match reformat.nodejs.access.service>
-  type file
-  path /var/log/td-agent/nodejs/access.log.path
-  symlink_path /var/log/td-agent/nodejs/access.log
-  buffer_type file
-  buffer_path /var/log/td-agent/buffer/nodejs.access.buf
-  format single_value
-</match>
-
-<match nginx.access.service>
-  type record_reformer
-  renew_record false
-  enable_ruby false
-
-  tag reformat.${tag}
-  <record>
-    message ${message}
-  </record>
-
-</match>
-
-<match reformat.nginx.access.service>
-  type file
-  path /var/log/td-agent/nginx/access.log.path
-  symlink_path /var/log/td-agent/nginx/access.log
-  buffer_type file
-  buffer_path /var/log/td-agent/buffer/nginx.access.buf
-  format single_value
 </match>

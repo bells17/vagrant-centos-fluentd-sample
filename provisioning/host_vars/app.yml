@@ -1,8 +1,15 @@
 ---
-fluentd_log_type: nodejs
-
-access_log_file: /var/log/nodejs/access.log
-access_log_pos_file: /etc/td-agent/pos/nodejs.access.log.pos
-
-error_log_file: /var/log/nodejs/error.log
-error_log_pos_file: /etc/td-agent/pos/nodejs.error.log.pos
+fluentd_application_type: nodejs
+fluentd_log_type:
+  access:
+    name: access
+    log_file: /var/log/nodejs/access.log
+    pos_file: /etc/td-agent/pos/nodejs.access.log.pos
+  error:
+    name: error
+    log_file: /var/log/nodejs/error.log
+    pos_file: /etc/td-agent/pos/nodejs.error.log.pos
+    tail_format:
+      - format multiline
+      - format_firstline /^\[(?:.|\n)*/
+      - format1 /(?<message>((?:.|\n)*[^\n ]))/

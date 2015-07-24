@@ -1,28 +1,36 @@
+{% for type in fluentd_log_type %}
 <source>
   type tail
-  path {{ access_log_file }}
-  pos_file {{ access_log_pos_file }}
-  tag {{ fluentd_log_type }}.access.service
+  path {{ fluentd_log_type[type].log_file }}
+  pos_file {{ fluentd_log_type[type].pos_file }}
+  tag {{ fluentd_application_type }}.{{ fluentd_log_type[type].name }}.service
+{% if fluentd_log_type[type].tail_format is defined %}
+{% for format in fluentd_log_type[type].tail_format %}
+  {{ format }}
+{% endfor %}
+{% else %}
   format none
+{% endif %}
 </source>
 
-<match {{ fluentd_log_type }}.access.service>
+{% endfor %}
+<match {{ fluentd_application_type }}.*.service>
   type record_reformer
   renew_record false
   enable_ruby false
-
   tag reformat.${tag}
+
   <record>
     message ${hostname} ${message}
   </record>
 
 </match>
 
-<match reformat.{{ fluentd_log_type }}.access.service>
+<match reformat.{{ fluentd_application_type }}.*.service>
   type forward
   flush_interval 1s
   buffer_type file
-  buffer_path /var/log/td-agent/buffer/client_buf
+  buffer_path /var/log/td-agent/buffer/forward_buf
   buffer_queue_limit 2048
   buffer_chunk_limit 8m
   flush_interval 60s
