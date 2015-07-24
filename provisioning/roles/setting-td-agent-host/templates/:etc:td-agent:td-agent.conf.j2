@@ -9,13 +9,16 @@
   <template>
     format single_value
     path /var/log/td-agent/${tag_parts[1]}/${tag_parts[2]}.log
+    time_slice_format %Y-%m-%d
     symlink_path /var/log/td-agent/${tag_parts[1]}/${tag_parts[2]}.log
+    append true
     compress gzip
     buffer_type file
     buffer_path /var/log/td-agent/buffer/${tag_parts[1]}.${tag_parts[2]}.buf
     buffer_queue_limit 6144
     buffer_chunk_limit 256m
     flush_interval 60s
+    flush_at_shutdown false
     retry_limit 19
   </template>
 
