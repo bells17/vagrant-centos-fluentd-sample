@@ -58,6 +58,4 @@ wget -O - 127.0.0.1/nginx_status
 ```
 # td-agent host
 vagrant ssh td_agent_host
-
 ```
-
