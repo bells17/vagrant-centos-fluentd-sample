@@ -58,4 +58,8 @@ wget -O - 127.0.0.1/nginx_status
 ```
 # td-agent host
 vagrant ssh td_agent_host
+tail -f /var/log/td-agent/nodejs/access.log
+tail -f /var/log/td-agent/nodejs/error.log
+tail -f /var/log/td-agent/nginx/access.log
+tail -f /var/log/td-agent/nginx/error.log
 ```
